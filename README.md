@@ -14,8 +14,7 @@
 4. [Data Dictionary — Tables & Columns](#4-data-dictionary--tables--columns)
 5. [Data Dictionary — Measures](#5-data-dictionary--measures)
 6. [Business Logic Explanations](#6-business-logic-explanations)
-7. [Usage Guidelines & Best Practices](#7-usage-guidelines--best-practices)
-8. [Appendix — DAX Reference](#8-appendix--dax-reference)
+7. [Appendix — DAX Reference](#8-appendix--dax-reference)
 
 ---
 
@@ -334,71 +333,7 @@ Several text columns in the `Date` table (Month Name, Month Short, Quarter, Day 
 
 This behaviour is built into the model and requires no action from report authors.
 
----
-
-## 7. Usage Guidelines & Best Practices
-
-### 7.1 For Report Authors
-
-**Always use `_Measures` fields — never raw columns**
-Drag measures from the `_Measures` table into visuals. Do not drag `Sales[SalesAmount]` directly — this bypasses formatting, descriptions, and business logic.
-
-**Use `Date` table columns for all date axes and slicers**
-Place `Date[Year]`, `Date[Month Name]`, `Date[Year-Month]`, etc. on axes and slicers. Never use `Sales[OrderDate]` for this purpose — doing so will break all time intelligence measures.
-
-**Understand BLANK vs. zero**
-Comparison measures return BLANK (not zero) when there is no prior period data. A BLANK cell in a table visual means "no prior period exists", not "no change". This is correct behaviour.
-
-**Pareto chart setup**
-1. Add `Products[ProductName]` to the axis
-2. Sort the visual by `Total Sales` descending
-3. Add `Total Sales` as a bar
-4. Add `Cumulative % of Total Sales` as a line on a secondary axis
-5. Add a reference line at 80% to identify the key product set
-
-**3-Month Moving Average**
-This measure is designed to be placed alongside `Total Sales` on a monthly line chart. It will not produce meaningful results at a year or quarter level of granularity.
-
----
-
-### 7.2 For Model Developers
-
-**Add new measures to `_Measures` only**
-Never create measures on `Sales`, `Products`, `Customers`, or `Date`. The `_Measures` table is the single authorised location.
-
-**Use display folders for all new measures**
-Assign every new measure to one of the existing display folders, or create a new clearly named folder. Do not leave measures at the root level.
-
-**Reference `[Total Sales]` as the base measure**
-All sales-related measures should reference `[Total Sales]` rather than calling `SUM(Sales[SalesAmount])` directly. This ensures that any future change to the base calculation propagates automatically.
-
-**Test time intelligence against the Date table**
-After any change to the `Date` table range or structure, verify that MTD, YTD, Previous Month, and Same Month LY all return expected values in a test report page before publishing.
-
-**Do not add bidirectional relationships**
-The current star schema uses single-direction filtering exclusively. Bidirectional relationships introduce ambiguity and can cause incorrect filter propagation. Consult the model owner before changing any relationship direction.
-
----
-
-### 7.3 Refresh & Data Currency
-
-| Consideration | Guidance |
-|---|---|
-| **Date table range** | `CALENDARAUTO()` expands automatically as new dates appear in `Sales[OrderDate]`. No manual update to the Date table is required. |
-| **New products / customers** | The `Products` and `Customers` dimension tables will reflect new records on the next scheduled refresh. |
-| **Historical data** | Time intelligence measures depend on complete historical data being present. Gaps in `Sales` history will cause prior-period measures to return BLANK for those periods. |
-
----
-
-### 7.4 Governance Notes
-
-- This model is the **single source of truth** for all metrics listed in Section 5. Ad-hoc calculations in individual reports that replicate or modify these measures should be reviewed and, where appropriate, promoted back into this certified model.
-- All measures include descriptions visible in the Power BI field list (hover to view). Report authors should read measure descriptions before using unfamiliar metrics.
-- The `Date` table is marked as a certified date table. Do not remove this designation.
-
----
-
-## 8. Appendix — DAX Reference
+## 7. Appendix — DAX Reference
 
 ### Base Measure
 
