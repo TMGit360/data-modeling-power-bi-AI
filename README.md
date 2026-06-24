@@ -3,7 +3,6 @@
 **Version:** 1.0  
 **Last Updated:** June 23, 2026  
 **Model:** Project Build.pbix  
-**Prepared for:** Stakeholder Distribution  
 
 ---
 
@@ -22,7 +21,7 @@
 
 ## 1. Executive Summary
 
-The **Project Build** semantic model is a self-contained Power BI data model designed to support sales performance analysis, customer behaviour insights, and product revenue reporting. It provides a single, governed source of truth for business metrics, enabling consistent reporting across all dashboards and ad-hoc analysis built on top of this model.
+The **Project Build** semantic model is a self-contained Power BI data model designed to support sales performance analysis, customer behaviour insights, and product revenue reporting. 
 
 ### Key Capabilities
 
@@ -118,7 +117,7 @@ erDiagram
 | Products → Sales | `Sales[ProductKey]` | `Products[ProductKey]` | Many-to-One | Single (Products → Sales) | Active |
 | Customers → Sales | `Sales[CustomerKey]` | `Customers[CustomerKey]` | Many-to-One | Single (Customers → Sales) | Active |
 
-> **Filter direction note:** All relationships use single-direction filtering. Dimension tables (Date, Products, Customers) filter the fact table (Sales). Sales does not filter the dimensions. This is the correct star schema pattern and prevents ambiguous cross-filtering.
+> **Filter direction note:** All relationships use single-direction filtering. Dimension tables (Date, Products, Customers) filter the fact table (Sales). Sales does not filter the dimensions. 
 
 ---
 
@@ -195,7 +194,7 @@ A fully calculated date dimension generated automatically from the date range pr
 
 ### 4.5 _Measures *(Measure Table)*
 
-A placeholder calculated table used solely to house all certified measures. It contains no data of analytical value. All 17 measures in this model live here, organised into display folders.
+A placeholder calculated table used solely to house all certified measures. It contains no data of analytical value. All 17 measures in this model live here, organized into display folders.
 
 **Display Folders:** Sales · Time Intelligence · Comparisons · Customer Metrics · Product Metrics · Pareto Analysis · Customer Segmentation · Trending
 
@@ -316,7 +315,7 @@ This produces a cumulative total that grows as you move down a ranked list. Comb
 
 The rolling window is anchored to `LASTDATE('Date'[Date])` — the most recent date in the current filter context. `DATESINPERIOD` then steps back 3 months from that anchor point to define the window. The total sales within that window is divided by 3 to produce a monthly average.
 
-**Practical effect:** If a user is looking at March 2025, the measure returns `(Jan + Feb + Mar Sales) ÷ 3`. If they are looking at a full year, it returns the 3-month window ending at December. This makes the measure most useful on a month-by-month line chart rather than annual summaries.
+**Practical effect:** If a user is looking at March 2025, the measure returns `(Jan + Feb + Mar Sales) ÷ 3`. 
 
 ---
 
